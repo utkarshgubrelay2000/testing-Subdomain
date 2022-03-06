@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 var authRouter = require('./routes/Auth');
 var userAuthRouter = require('./routes/userAuth');
 var sectionRouter = require('./routes/section');
+var contactRouter = require('./routes/contact');
 let mongoServer=require('./model/clientConnection')
 mongoServer.mongoConnect().then(client=>{
   console.log('conneected to server')
@@ -20,6 +21,7 @@ app.use(express.json())
 app.use('/auth', authRouter);
 app.use('/user/auth/', userAuthRouter);
 app.use('/section', sectionRouter);
+app.use('/contact', contactRouter);
 
 
 
