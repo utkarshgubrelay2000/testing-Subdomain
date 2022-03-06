@@ -1,19 +1,26 @@
+const { ObjectId } = require('mongodb');
 const baseModel=require('../model/baseModel')
-const { getSubDomain,checkSubdomainExist } = require("../services/subdomainServices");
+const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServices");
 
 
 exports.getSectionById = async (req, res) => {
-    const sectionData =req.body;
-    const {section,id} =req.params;
-    let subdomain=await getSubDomain(req.get('origin'))
-    if(!checkSubdomainExist(subdomain))
-    return res.status(404).json({error:true, message: "No subdomain found with in Database" });
+ 
+    let {section,id} =req.params;
+    let subdomain=await getSubDomain(req.get('host'))
+    // get subdomain
+    id=ObjectId(id)
+    
+    // if(await checkSubDomainExist(subdomain))
+    // return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
+          console.log('start');
           let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          const result =await sectionCollection.updateOne({_id:id},{...sectionData});
-            res.json({ error:false, data: "Section created successfully" });
+          const result =await sectionCollection.findOne({_id:id});
+          console.log('stop');
+
+            res.json({ error:false, data: result });
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
@@ -22,15 +29,15 @@ exports.getSectionById = async (req, res) => {
 };
 exports.getSection = async (req, res) => {
     const {section} =req.params;
-    let subdomain=await getSubDomain(req.get('origin'))
+    let subdomain=await getSubDomain(req.get('host'))
     console.log('subdomain',subdomain);
-   if(!checkSubdomainExist(subdomain))
-        return res.status(404).json({error:true, message: "No subdomain found with in Database" });
+//    if(await checkSubDomainExist(subdomain))
+//         return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
           let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          const result =await sectionCollection.find({});
+          const result =await sectionCollection.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
@@ -42,9 +49,11 @@ exports.getSection = async (req, res) => {
 exports.addSection = async (req, res) => {
     const sectionData =req.body;
     const {section} =req.params;
-    let subdomain=await getSubDomain(req.get('origin'))
-    console.log('subdomain',subdomain);
-    if(!checkSubdomainExist(subdomain))
+
+    let subdomain=await getSubDomain(req.get('host'))
+    console.log('subdomain',await checkSubDomainExist(subdomain));
+
+    if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
@@ -63,16 +72,18 @@ exports.addSection = async (req, res) => {
 };
 exports.editSection = async (req, res) => {
     const sectionData =req.body;
-    const {section,id} =req.params;
-    let subdomain=await getSubDomain(req.get('origin'))
-    if(!checkSubdomainExist(subdomain))
+    let {section,id} =req.params;
+    let subdomain=await getSubDomain(req.get('host'))
+    if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
           let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          const result =await sectionCollection.updateOne({_id:id},{...sectionData});
-            res.json({ error:false, data: "Section created successfully" });
+          id=ObjectId(id)
+          const result =await sectionCollection.findOneAndUpdate({_id:id},{$set:sectionData});
+          console.log('result',result,id);
+            res.json({ error:false, data: "Section updated successfully" });
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });

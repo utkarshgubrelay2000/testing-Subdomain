@@ -6,7 +6,13 @@ const bodyParser = require('body-parser');
 var authRouter = require('./routes/Auth');
 var userAuthRouter = require('./routes/userAuth');
 var sectionRouter = require('./routes/section');
+let mongoServer=require('./model/clientConnection')
+mongoServer.mongoConnect().then(client=>{
+  console.log('conneected to server')
 
+}).catch(err=>{
+ console.log('error while connecting to server') 
+})
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json())
