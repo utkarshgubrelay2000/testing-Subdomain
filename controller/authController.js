@@ -1,123 +1,93 @@
 const jwt = require("jsonwebtoken");
-const bcryptjs = require("bcryptjs");
-var validate = require("validate.js");
-const adminModel=require('../model/adminModel')
+const baseModel=require('../model/baseModel')
+const bcrypt = require("bcryptjs");
+var AWS = require('aws-sdk')
+AWS.config.apiVersions = {
+  route53: '2013-04-01',
+  // other service API versions
+};
+var route53 = new AWS.Route53({ accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
+exports.signUp = async (req, res) => {
+  let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
+  const { firstName, lastName, email, mobile, password } =req.body;
+  try {
+    const existingUser = await edtechAdminDb.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({error:true, message: "User already exists" });
+   
+    const salt = await bcrypt.genSaltSync(10);
+    console.log(password);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-
-/////////------ User SignUp ----////////////////
-
-exports.Signup = (req, res) => {
-  const { name, email, password, mobile} = req.body;
- // const mobileNumber = req.body.mobileNumber ? req.body.mobileNumber : null;
-  /**  name:string, 
-    mobileNumber:number,
-    password:string,
-   */
-  // validation
-  let validation = validate(req.body, {
-    name: {
-      presence: true,
-      format: {
-        pattern: "^([a-zA-z]*\\s*)*[a-zA-z]$",
-        message:
-          "Enter full name and it can only contain alphabets and space in between",
-      },
-    },
-    email: {
-      presence: true,
-      email: true,
-    },
-    password: {
-      presence: true,
-      length: { minimum: 6, message: "password must be 8 characters long" },
-    },
-  });
-  if (validation) {
-    res.status(400).json({ error: validation });
-    return console.log(validation);
-  } else {
-    adminModel.findOne({$or:[{email: email},{mobile:mobile}] }).then((user) => {
-      if (user) {
-        res.status(404).json({ error:true,data: "email or Mobile  is already taken" });
-      } else {
-        bcryptjs.hash(password, 12).then((hashedpassword) => {
-          let newStudent = new adminModel({
-            email: email,
-            password: hashedpassword,
-            name: name,
-            mobile: mobile,
-          });
-        //  console.log('done');
-          newStudent
-            .save()
-            .then((user) => {
-             // console.log(user);
-              const token = jwt.sign(
-                { secretId: user.uId },
-                process.env.JWT_SECRET
-              );
-              res.json({error:false,
-                message: "signUp successfully",
-              });
-            })
-            .catch((err) => {
-              //   console.log(err.message)
-              res.status(404).json({ error: err.message });
-            });
-        });
-      }
+    const result =await edtechAdminDb.insertOne({
+      email,
+      mobile,
+      password: hashedPassword,
+      firstName,
+      lastName,
+      subdomain:firstName,
     });
+  
+    res.status(200).json({ error:false, message: "User created successfully" });
+  } catch (err) {
+    console.error("Error is ", err);
+    res.status(500).json({error:true, message: "Something's wrong" });
   }
 };
-/////////------ User SignIn ----////////////////
-exports.Signin = (req, res) => {
+exports.signIn = async (req, res) => {
   const { email, password } = req.body;
-  let validation = validate(req.body, {
-    email: {
-      presence: true,
-      email: true,
-    },
-    password: {
-      presence: true,
-    },
-  });
+  let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
 
-  if (validation) {
-    res.status(400).json({ error: validation });
-    return console.log(validation);
-  } else {
-    adminModel.findOne({ email: email }).then((user) => {
-      if (user) {
-        // console.log(password,user.password)
-        bcryptjs
-          .compare(password, user.password)
-          .then((ifSame) => {
-            //if user is normal user
-            if (ifSame) {
-              let md5 = require("md5");
-              let userId = md5(user._id);
-              const token = jwt.sign(
-                { secretId: userId },
-                process.env.JWT_SECRET
-              );
-              res.json({
-                message: "SignSuccess",
-                token: token,
-                email: user.email,
-                name: user.name,
-              });
-            } else {
-              res.status(400).json({ error: "Invalid password" });
-            }
-          })
-          .catch((err) => {
-            console.log("error in comparing password", err);
-          });
-      } else {
-        res
-          .status(404)
-          .json({ error: "User not found of " + email + " address" });
-      }
+  try {
+    const existingUser = await edtechAdminDb.findOne({ email });
+    if (!existingUser)
+      return res.status(404).json({error:true, message: "No User with this Email exists." });
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (!isPasswordValid)
+      return res.status(400).json({error:true, message: "Invalid password" });
+//console.log(existingUser);
+    const token = jwt.sign(
+      { email: existingUser.email, id: existingUser._id },
+      "test",
+      { expiresIn: "240h" }
+    );
+    var subDomainName = existingUser.firstName;
+
+var params = {
+  ChangeBatch: {
+    Changes: [
+      {
+        Action: "CREATE",
+        ResourceRecordSet: {
+          AliasTarget: { 
+            DNSName: "testbrandwick.com",
+            EvaluateTargetHealth: false,
+            HostedZoneId: "Z09497883BWP3MGTKYB6W" 
+          },
+          Name: "jay"+".testbrandwick.com",
+          Type: "A"
+        }
+      }],
+      },
+  
+      HostedZoneId: "Z09497883BWP3MGTKYB6W",// Depends on the type of resource that you want to route traffic to
+     };
+     route53.changeResourceRecordSets(params, function(err, data) {
+
+      if (err) console.log(err.stack); // an error occurred
+      
+      else console.log(data);
+    res.status(200).json({error:false, result: existingUser, token });
     });
-  }
+  
+  } catch (err) {
+    console.log("Error is", err);
+    res.status(500).json({error:true, message: "Something's wrong" });
+    console.log(err.message);
+}
 };
