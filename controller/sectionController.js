@@ -6,7 +6,7 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 exports.getSectionById = async (req, res) => {
  
     let {section,id} =req.params;
-    let subdomain=await getSubDomain(req.get('host'))
+    let subdomain=await getSubDomain(req.get('origin'))
     // get subdomain
     id=ObjectId(id)
     
@@ -29,7 +29,7 @@ exports.getSectionById = async (req, res) => {
 };
 exports.getSection = async (req, res) => {
     const {section} =req.params;
-    let subdomain=await getSubDomain(req.get('host'))
+    let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',subdomain);
 //    if(await checkSubDomainExist(subdomain))
 //         return res.status(404).json({error:true, message: "No subdomain found with in Database" });
@@ -50,7 +50,7 @@ exports.addSection = async (req, res) => {
     const sectionData =req.body;
     const {section} =req.params;
 
-    let subdomain=await getSubDomain(req.get('host'))
+    let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',await checkSubDomainExist(subdomain));
 
     if(await checkSubDomainExist(subdomain))
@@ -73,7 +73,7 @@ exports.addSection = async (req, res) => {
 exports.editSection = async (req, res) => {
     const sectionData =req.body;
     let {section,id} =req.params;
-    let subdomain=await getSubDomain(req.get('host'))
+    let subdomain=await getSubDomain(req.get('origin'))
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')
