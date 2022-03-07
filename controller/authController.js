@@ -56,34 +56,34 @@ exports.signIn = async (req, res) => {
       "test",
       { expiresIn: "240h" }
     );
-    var subDomainName = existingUser.firstName;
+//     var subDomainName = existingUser.firstName;
 
-var params = {
-  ChangeBatch: {
-    Changes: [
-      {
-        Action: "CREATE",
-        ResourceRecordSet: {
-          AliasTarget: { 
-            DNSName: "testbrandwick.com",
-            EvaluateTargetHealth: false,
-            HostedZoneId: "Z09497883BWP3MGTKYB6W" 
-          },
-          Name: "jay"+".testbrandwick.com",
-          Type: "A"
-        }
-      }],
-      },
+// var params = {
+//   ChangeBatch: {
+//     Changes: [
+//       {
+//         Action: "CREATE",
+//         ResourceRecordSet: {
+//           AliasTarget: { 
+//             DNSName: "testbrandwick.com",
+//             EvaluateTargetHealth: false,
+//             HostedZoneId: "Z09497883BWP3MGTKYB6W" 
+//           },
+//           Name: "jay"+".testbrandwick.com",
+//           Type: "A"
+//         }
+//       }],
+//       },
   
-      HostedZoneId: "Z09497883BWP3MGTKYB6W",// Depends on the type of resource that you want to route traffic to
-     };
-     route53.changeResourceRecordSets(params, function(err, data) {
+//       HostedZoneId: "Z09497883BWP3MGTKYB6W",// Depends on the type of resource that you want to route traffic to
+//      };
+//      route53.changeResourceRecordSets(params, function(err, data) {
 
-      if (err) console.log(err.stack); // an error occurred
+//       if (err) console.log(err.stack); // an error occurred
       
-      else console.log(data);
+//       else console.log(data);
+//     });
     res.status(200).json({error:false, result: existingUser, token });
-    });
   
   } catch (err) {
     console.log("Error is", err);
