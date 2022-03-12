@@ -4,7 +4,7 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 
 
 exports.getSectionById = async (req, res) => {
- 
+    if(req.get('origin')){
     let {id} =req.params;
     let subdomain=await getSubDomain(req.get('origin'))
     // get subdomain
@@ -23,15 +23,17 @@ exports.getSectionById = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }
+        }}
+        res.status(500).json({error:true, data: "Origin host not Found" });
 
 };
 exports.getSection = async (req, res) => {
-   
+   if(req.get('origin')){
+
+  
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',subdomain);
-//    if(await checkSubDomainExist(subdomain))
-//         return res.status(404).json({error:true, message: "No subdomain found with in Database" });
+
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
@@ -42,12 +44,14 @@ exports.getSection = async (req, res) => {
 
             res.status(500).json({error:true, data: error.data });
         }
+    }
+    res.status(500).json({error:true, data: "Origin host not Found" });
 
 };
 
 exports.addSection = async (req, res) => {
     const sectionData =req.body;
-   
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',await checkSubDomainExist(subdomain));
 
@@ -68,11 +72,18 @@ exports.addSection = async (req, res) => {
 
             res.status(500).json({error:true, data: error.message });
         }
+    }
+    else{
+        res.status(500).json({error:true, data: "Origin host not Found" });
+    }
+
+
 
 };
 exports.editSection = async (req, res) => {
     const sectionData =req.body;
     let {id} =req.params;
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
@@ -90,5 +101,8 @@ exports.editSection = async (req, res) => {
 
             res.status(500).json({error:true, data: error.message });
         }
-
+    }
+    else{
+        res.status(500).json({error:true, data: "Origin host not Found" });
+    }
 };
