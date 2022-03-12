@@ -1,3 +1,4 @@
+const e = require('express');
 const { ObjectId } = require('mongodb');
 const baseModel=require('../model/baseModel')
 const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServices");
@@ -6,6 +7,7 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 exports.getcontactById = async (req, res) => {
  
     let {id} =req.params;
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     // get subdomain
     id=ObjectId(id)
@@ -26,13 +28,15 @@ exports.getcontactById = async (req, res) => {
             res.status(500).json({error:true, data: error.message });
         }
 
+}
+else
+ return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
 };
 exports.getcontact = async (req, res) => {
-  
+  if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',subdomain);
-//    if(await checkSubDomainExist(subdomain))
-//         return res.status(404).json({error:true, message: "No subdomain found with in Database" });
+
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
@@ -42,13 +46,15 @@ exports.getcontact = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.data });
-        }
+        }}
+        else
+ return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
 
 };
 
 exports.addcontact = async (req, res) => {
     const contactData =req.body;
-   
+    if(req.get('origin')){
 
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',await checkSubDomainExist(subdomain));
@@ -67,12 +73,15 @@ exports.addcontact = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }
+        }}
+        else
+        return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
 
 };
 exports.editcontact = async (req, res) => {
     const contactData =req.body;
     let {id} =req.params;
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
@@ -87,6 +96,8 @@ exports.editcontact = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }
+        }}
+        else 
+        return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
 
 };

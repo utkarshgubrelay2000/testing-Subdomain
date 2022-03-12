@@ -6,6 +6,7 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 exports.getbrandById = async (req, res) => {
     if(req.get('origin')){
     let {id} =req.params;
+    
     let subdomain=await getSubDomain(req.get('origin'))
     // get subdomain
     id=ObjectId(id)
