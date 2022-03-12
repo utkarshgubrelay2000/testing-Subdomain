@@ -4,7 +4,7 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 
 
 exports.getbrandById = async (req, res) => {
- 
+    if(req.get('origin')){
     let {id} =req.params;
     let subdomain=await getSubDomain(req.get('origin'))
     // get subdomain
@@ -24,15 +24,16 @@ exports.getbrandById = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }
+        }}
+        else 
+        return res.json({ error:true, data: "Origin host not found" });
 
 };
 exports.getbrand = async (req, res) => {
-  
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',subdomain);
-//    if(await checkSubDomainExist(subdomain))
-//         return res.status(404).json({error:true, message: "No subdomain found with in Database" });
+
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
@@ -44,11 +45,16 @@ exports.getbrand = async (req, res) => {
             res.status(500).json({error:true, data: error.data });
         }
 
+
+    }
+else{
+    res.json({ error:true, data: "Origin host not found" });
+}
 };
 
 exports.addbrand = async (req, res) => {
     const brandData =req.body;
-   
+    if(req.get('origin')){
 
     let subdomain=await getSubDomain(req.get('origin'))
     console.log('subdomain',await checkSubDomainExist(subdomain));
@@ -68,11 +74,16 @@ exports.addbrand = async (req, res) => {
 
             res.status(500).json({error:true, data: error.message });
         }
+    }
+        else{
+            res.json({ error:true, data: "Origin host not found" });
+        }
 
 };
 exports.editbrand = async (req, res) => {
     const brandData =req.body;
     let {id} =req.params;
+    if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
@@ -87,6 +98,8 @@ exports.editbrand = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }
+        }}
+        else
+        return res.json({ error:true, data: "Origin host not found" });
 
 };
