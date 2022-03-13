@@ -79,7 +79,7 @@ exports.addcontact = async (req, res) => {
 
 };
 exports.editcontact = async (req, res) => {
-    const contactData =req.body;
+    const contactData =req.body; 
     let {id} =req.params;
     if(req.get('origin')){
     let subdomain=await getSubDomain(req.get('origin'))
