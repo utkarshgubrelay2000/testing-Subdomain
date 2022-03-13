@@ -33,7 +33,7 @@ exports.getcontactById = async (req, res) => {
 exports.getcontact = async (req, res) => {
  
    
-    console.log('subdomain',subdomain);
+
 
 
    
@@ -54,12 +54,7 @@ exports.addcontact = async (req, res) => {
    
 
    
-    console.log('subdomain',await checkSubDomainExist(subdomain));
-
-    if(await checkSubDomainExist(subdomain))
-    return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-
-   
+    
 
       try {
           let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
@@ -77,9 +72,7 @@ exports.editcontact = async (req, res) => {
     let {id} =req.params;
    
    
-    if(await checkSubDomainExist(subdomain))
-    return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-
+  
    
       try {
           let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
