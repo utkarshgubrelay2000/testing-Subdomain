@@ -7,18 +7,18 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 exports.getcontactById = async (req, res) => {
  
     let {id} =req.params;
-    if(req.get('host')){
-    let subdomain=await getSubDomain(req.get('host'))
+ 
+   
     // get subdomain
     id=ObjectId(id)
     
     // if(await checkSubDomainExist(subdomain))
     // return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+
+   
       try {
           console.log('start');
-          let contactCollection=await baseModel.mongoConnect(subdomain,"contact")
+          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
           const result =await contactCollection.findOne({_id:id});
           console.log('stop');
 
@@ -29,43 +29,40 @@ exports.getcontactById = async (req, res) => {
         }
 
 }
-else
- return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
-};
+
 exports.getcontact = async (req, res) => {
-  if(req.get('host')){
-    let subdomain=await getSubDomain(req.get('host'))
+ 
+   
     console.log('subdomain',subdomain);
 
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+
+   
       try {
-          let contactCollection=await baseModel.mongoConnect(subdomain,"contact")
+          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
           const result =await contactCollection.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
             res.status(500).json({error:true, data: error.data });
-        }}
-        else
- return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
+        }
+        
 
 };
 
 exports.addcontact = async (req, res) => {
     const contactData =req.body;
-    if(req.get('host')){
+   
 
-    let subdomain=await getSubDomain(req.get('host'))
+   
     console.log('subdomain',await checkSubDomainExist(subdomain));
 
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+
+   
 
       try {
-          let contactCollection=await baseModel.mongoConnect(subdomain,"contact")
+          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
           const result =await contactCollection.insertOne({
               ...contactData,
             });
@@ -73,22 +70,19 @@ exports.addcontact = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }}
-        else
-        return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
-
+        }
 };
 exports.editcontact = async (req, res) => {
     const contactData =req.body; 
     let {id} =req.params;
-    if(req.get('host')){
-    let subdomain=await getSubDomain(req.get('host'))
+   
+   
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+
+   
       try {
-          let contactCollection=await baseModel.mongoConnect(subdomain,"contact")
+          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
           id=ObjectId(id)
           const result =await contactCollection.findOneAndUpdate({_id:id},{$set:contactData});
           console.log('result',result,id);
@@ -96,8 +90,5 @@ exports.editcontact = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }}
-        else 
-        return res.status(404).json({error:true, message: "No subdomain found with in Host Url" });
-
+        }
 };

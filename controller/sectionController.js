@@ -27,7 +27,7 @@ exports.getSectionById = async (req, res) => {
 
 };
 exports.getSection = async (req, res) => {
- 
+ console.log('subdomain',req.subdomain);
 
       try {
           let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
