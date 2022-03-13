@@ -4,17 +4,16 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 
 
 exports.getSectionById = async (req, res) => {
-    if(req.get('host')){
+   
     let {id} =req.params;
-    let subdomain=await getSubDomain(req.get('host'))
+    
     // get subdomain
     id=ObjectId(id)
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+  
       try {
           console.log('start');
         //  let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          let sectionCollection=await baseModel.mongoConnect(subdomain,'homepage')
+          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
 
           const result =await sectionCollection.findOne({_id:id});
           console.log('stop');
@@ -23,46 +22,32 @@ exports.getSectionById = async (req, res) => {
         } catch (error) {
 
             res.status(500).json({error:true, data: error.message });
-        }}
-        res.status(500).json({error:true, data: "Origin host not Found" });
+        }
+      //  res.status(500).json({error:true, data: "Origin host not Found" });
 
 };
 exports.getSection = async (req, res) => {
-   if(req.get('host')){
+ 
 
-  
-    let subdomain=await getSubDomain(req.get('host'))
-    console.log('subdomain',subdomain);
-
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
       try {
-          let sectionCollection=await baseModel.mongoConnect(subdomain,'homepage')
+          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
           const result =await sectionCollection.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
             res.status(500).json({error:true, data: error.data });
         }
-    }
-    res.status(500).json({error:true, data: "Origin host not Found" });
-
+    
+   
 };
 
 exports.addSection = async (req, res) => {
     const sectionData =req.body;
-    if(req.get('host')){
-    let subdomain=await getSubDomain(req.get('host'))
-    console.log('subdomain',await checkSubDomainExist(subdomain));
-
-    if(await checkSubDomainExist(subdomain))
-    return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
-
+  
+  
       try {
         
-          let sectionCollection=await baseModel.mongoConnect(subdomain,'homepage')
+          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
 
           const result =await sectionCollection.insertOne({
               ...sectionData,
@@ -72,10 +57,7 @@ exports.addSection = async (req, res) => {
 
             res.status(500).json({error:true, data: error.message });
         }
-    }
-    else{
-        res.status(500).json({error:true, data: "Origin host not Found" });
-    }
+   
 
 
 
@@ -83,15 +65,11 @@ exports.addSection = async (req, res) => {
 exports.editSection = async (req, res) => {
     const sectionData =req.body;
     let {id} =req.params;
-    if(req.get('host')){
-    let subdomain=await getSubDomain(req.get('host'))
-    if(await checkSubDomainExist(subdomain))
-    return res.status(404).json({error:true, message: "No subdomain found with in Database" });
-    if(subdomain=='localhost')
-      return  res.status(200).json({error:true, data: "Wrong Url" });
+ 
+
       try {
       //    let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          let sectionCollection=await baseModel.mongoConnect(subdomain,'homepage')
+          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
 
           id=ObjectId(id)
           const result =await sectionCollection.findOneAndUpdate({_id:id},{$set:sectionData});
@@ -101,8 +79,6 @@ exports.editSection = async (req, res) => {
 
             res.status(500).json({error:true, data: error.message });
         }
-    }
-    else{
-        res.status(500).json({error:true, data: "Origin host not Found" });
-    }
+    
+   
 };
