@@ -4,10 +4,10 @@ const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServi
 
 
 exports.getbrandById = async (req, res) => {
-    if(req.get('origin')){
+    if(req.get('host')){
     let {id} =req.params;
     
-    let subdomain=await getSubDomain(req.get('origin'))
+    let subdomain=await getSubDomain(req.get('host'))
     // get subdomain
     id=ObjectId(id)
     
@@ -31,8 +31,8 @@ exports.getbrandById = async (req, res) => {
 
 };
 exports.getbrand = async (req, res) => {
-    if(req.get('origin')){
-    let subdomain=await getSubDomain(req.get('origin'))
+    if(req.get('host')){
+    let subdomain=await getSubDomain(req.get('host'))
     console.log('subdomain',subdomain);
 
     if(subdomain=='localhost')
@@ -55,9 +55,9 @@ else{
 
 exports.addbrand = async (req, res) => {
     const brandData =req.body;
-    if(req.get('origin')){
+    if(req.get('host')){
 
-    let subdomain=await getSubDomain(req.get('origin'))
+    let subdomain=await getSubDomain(req.get('host'))
     console.log('subdomain',await checkSubDomainExist(subdomain));
 
     if(await checkSubDomainExist(subdomain))
@@ -84,8 +84,8 @@ exports.addbrand = async (req, res) => {
 exports.editbrand = async (req, res) => {
     const brandData =req.body;
     let {id} =req.params;
-    if(req.get('origin')){
-    let subdomain=await getSubDomain(req.get('origin'))
+    if(req.get('host')){
+    let subdomain=await getSubDomain(req.get('host'))
     if(await checkSubDomainExist(subdomain))
     return res.status(404).json({error:true, message: "No subdomain found with in Database" });
     if(subdomain=='localhost')

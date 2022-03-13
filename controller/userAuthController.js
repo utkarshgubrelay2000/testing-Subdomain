@@ -7,7 +7,7 @@ const { getSubDomain } = require("../services/subdomainServices");
 
 exports.signUp = async (req, res) => {
     const { firstName, lastName, email, mobile, password } =req.body;
-    let subdomain=await getSubDomain(req.get('origin'))
+    let subdomain=await getSubDomain(req.get('host'))
     console.log('subdomain',subdomain);
     if(subdomain=='localhost')
       return  res.status(200).json({error:true, message: "Wrong Url" });
@@ -66,7 +66,7 @@ exports.signUp = async (req, res) => {
 };
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
-  let subdomain=await getSubDomain(req.get('origin'))
+  let subdomain=await getSubDomain(req.get('host'))
   console.log('subdomain',subdomain);
   let edtechAdminDb=await baseModel.mongoConnect(subdomain,'users')
 
