@@ -13,7 +13,7 @@ mongoServer.mongoConnect().then(client=>{
   console.log('conneected to server')
 
 }).catch(err=>{
- console.log('error while connecting to server') 
+ console.log('error while connecting to server',err) 
 })
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
