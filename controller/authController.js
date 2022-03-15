@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const baseModel=require('../model/baseModel')
 const bcrypt = require("bcryptjs");
-var AWS = require('aws-sdk')
+var AWS = require('aws-sdk');
+const { sectionData } = require("../services/DefaultData");
 AWS.config.apiVersions = {
   route53: '2013-04-01',
   // other service API versions
@@ -10,7 +11,7 @@ var route53 = new AWS.Route53({ accessKeyId: process.env.AWS_ACCESS_KEY_ID,
    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
 exports.signUp = async (req, res) => {
   let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
-  const { firstName, lastName, email, mobile, password } =req.body;
+  const { firstName, lastName, email, mobile, password,theme } =req.body;
   try {
     const existingUser = await edtechAdminDb.findOne({ email });
     if (existingUser)
@@ -26,9 +27,14 @@ exports.signUp = async (req, res) => {
       password: hashedPassword,
       firstName,
       lastName,
-      subdomain:firstName,
+      subdomain:firstName,theme
     });
+    let sectionCollection=await baseModel.mongoConnect(firstName,'homepage')
   
+
+ await sectionCollection.insertOne({
+        ...sectionData,
+      });
     res.status(200).json({ error:false, message: "User created successfully" });
   } catch (err) {
     console.error("Error is ", err);
