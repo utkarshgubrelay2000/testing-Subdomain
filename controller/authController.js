@@ -58,7 +58,7 @@ exports.signIn = async (req, res) => {
       return res.status(400).json({error:true, message: "Invalid password" });
 //console.log(existingUser);
     const token = jwt.sign(
-      { email: existingUser.email, id: existingUser._id,subdomain:existingUser.subdomain },
+      { email: existingUser.email, id: existingUser._id,subdomain:existingUser.firstName },
       "test",
       { expiresIn: "240h" }
     );
