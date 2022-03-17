@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var adminAuthentication=require('../controller/authController')
+var adminAuthentication=require('../controller/authController');
+const { auth } = require('../middleware/auth');
 /* GET home page. */
 router.post('/signup',adminAuthentication.signUp,err=>{
   console.log('error while signup user')

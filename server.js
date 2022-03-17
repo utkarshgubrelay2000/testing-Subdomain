@@ -8,7 +8,10 @@ var userAuthRouter = require('./routes/userAuth');
 var sectionRouter = require('./routes/section');
 var contactRouter = require('./routes/contact');
 var brandRouter = require('./routes/brand');
+var userRouter = require('./routes/user');
 let mongoServer=require('./model/clientConnection')
+var busboy = require('connect-busboy');
+app.use(busboy());
 mongoServer.mongoConnect().then(client=>{
   console.log('conneected to server')
 
@@ -21,6 +24,7 @@ app.use(express.json())
 
 app.use('/auth', authRouter);
 app.use('/user/auth/', userAuthRouter);
+app.use('/admin', userRouter);
 app.use('/section', sectionRouter);
 app.use('/brand', brandRouter);
 app.use('/contact', contactRouter);

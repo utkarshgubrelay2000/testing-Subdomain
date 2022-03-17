@@ -9,6 +9,7 @@ AWS.config.apiVersions = {
 };
 var route53 = new AWS.Route53({ accessKeyId: process.env.AWS_ACCESS_KEY_ID,
    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY });
+
 exports.signUp = async (req, res) => {
   let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
   const { firstName, lastName, email, mobile, password,theme } =req.body;
@@ -97,3 +98,4 @@ exports.signIn = async (req, res) => {
     console.log(err.message);
 }
 };
+
