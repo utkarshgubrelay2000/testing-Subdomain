@@ -11,7 +11,7 @@ exports.getSectionById = async (req, res) => {
   
       try {
         
-let subdomain=await getSubDomain(req.get('host'))
+let subdomain=await getSubDomain(req.get('origin'))
 if(checkSubDomainExist(subdomain)){
           let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
 
@@ -30,7 +30,7 @@ if(checkSubDomainExist(subdomain)){
 };
 exports.getSection = async (req, res) => {
 
-let subdomain=await getSubDomain(req.get('host'))
+let subdomain=await getSubDomain(req.get('origin'))
 if(checkSubDomainExist(subdomain)){
 
     try {
