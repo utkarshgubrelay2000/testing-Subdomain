@@ -16,7 +16,7 @@ exports.getSubDomain=async(reqHost)=>{
 exports.checkSubDomainExist=async(subdomain)=>{
     let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
     let subdomainPresent=await edtechAdminDb.findOne({subdomain})
-  //  console.log('subdomainPresent',subdomainPresent);
+   console.log('subdomainPresent',subdomainPresent);
       if(subdomainPresent)
       return true;
       else

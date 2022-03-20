@@ -31,7 +31,12 @@ if(checkSubDomainExist(subdomain)){
 exports.getSection = async (req, res) => {
 
 let subdomain=await getSubDomain(req.get('origin'))
-if(checkSubDomainExist(subdomain)){
+// check for localhost'
+console.log('subdomain',subdomain);
+if(subdomain=='localhost' && subdomain){
+    return res.json({ error:true, data: "No Subdomain" });
+}
+else if(checkSubDomainExist(subdomain)){
 
     try {
         let sectionCollection=await baseModel.mongoConnect(subdomain,'homepage')
