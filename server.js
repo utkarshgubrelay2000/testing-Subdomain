@@ -9,6 +9,7 @@ var sectionRouter = require('./routes/section');
 var contactRouter = require('./routes/contact');
 var brandRouter = require('./routes/brand');
 var userRouter = require('./routes/user');
+var studentRouter = require('./routes/student');
 let mongoServer=require('./model/clientConnection')
 var busboy = require('connect-busboy');
 app.use(busboy());
@@ -24,6 +25,7 @@ app.use(express.json())
 
 app.use('/auth', authRouter);
 app.use('/user/auth/', userAuthRouter);
+app.use('/user/section/', studentRouter);
 app.use('/admin', userRouter);
 app.use('/section', sectionRouter);
 app.use('/brand', brandRouter);
