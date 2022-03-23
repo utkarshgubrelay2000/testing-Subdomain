@@ -32,7 +32,8 @@ exports.getSection = async (req, res) => {
 
 let subdomain=await getSubDomain(req.get('origin'))
 // check for localhost'
-console.log('subdomain',req.connection);
+console.log('subdomain',subdomain);
+
 if(subdomain=='localhost' && subdomain){
     return res.json({ error:true, data: "No Subdomain" });
 }
