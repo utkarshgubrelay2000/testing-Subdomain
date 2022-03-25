@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
-const baseModel=require('../model/baseModel')
-const { getSubDomain,checkSubDomainExist } = require("../services/subdomainServices");
+const baseModel=require('../../model/baseModel')
+const { getSubDomain,checkSubDomainExist } = require("../../services/subdomainServices");
 
 
 exports.getSectionById = async (req, res) => {

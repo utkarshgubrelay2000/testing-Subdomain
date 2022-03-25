@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var userAuthentication=require('../controller/userAuthController')
+var userAuthentication=require('../controller/student/userAuthController');
 /* GET home page. */
 router.post('/signup',userAuthentication.signUp,err=>{
   console.log('error while signup user')

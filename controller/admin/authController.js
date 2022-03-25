@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
-const baseModel=require('../model/baseModel')
+const baseModel=require('../../model/baseModel')
 const bcrypt = require("bcryptjs");
 var AWS = require('aws-sdk');
-const { sectionData } = require("../services/DefaultData");
+const { sectionData } = require("../../services/DefaultData");
 AWS.config.apiVersions = {
   route53: '2013-04-01',
   // other service API versions

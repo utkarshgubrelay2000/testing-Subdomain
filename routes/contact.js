@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var contactController=require('../controller/contactController')
+var contactController=require('../controller/admin/contactController')
 const  verifyAdmin = require('../middleware/auth');
 
 /* GET home page. */

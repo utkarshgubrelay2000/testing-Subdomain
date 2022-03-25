@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
-const baseModel=require('../model/baseModel')
+const baseModel=require('../../model/baseModel')
 const bcrypt = require("bcryptjs");
-const { getSubDomain } = require("../services/subdomainServices");
+const { getSubDomain } = require("../../services/subdomainServices");
 
  
 

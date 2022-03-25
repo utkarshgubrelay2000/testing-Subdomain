@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var brandController=require('../controller/brandController')
+var brandController=require('../controller/admin/brandController');
 const  verifyAdmin = require('../middleware/auth');
 
 router.post('/',verifyAdmin.auth,brandController.addbrand,err=>{

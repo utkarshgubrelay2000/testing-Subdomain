@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var sectionController=require('../controller/sectionController');
+var sectionController=require('../controller/admin/sectionController');
 const  verifyAdmin = require('../middleware/auth');
 /* GET home page. */
 router.post('/',verifyAdmin.auth,sectionController.addSection,err=>{

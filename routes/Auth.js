@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var adminAuthentication=require('../controller/authController');
+var adminAuthentication=require('../controller/admin/authController');
 const { auth } = require('../middleware/auth');
 /* GET home page. */
 router.post('/signup',adminAuthentication.signUp,err=>{
