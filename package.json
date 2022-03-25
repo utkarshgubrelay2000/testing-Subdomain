@@ -18,6 +18,7 @@
     "ejs": "^3.1.5",
     "express": "~4.16.1",
     "fast-crc32c": "^1.0.4",
+    "generate-unique-id": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "mongodb": "^4.4.0",

@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const baseModel=require('../../model/baseModel')
 const bcrypt = require("bcryptjs");
+const generateUniqueId = require('generate-unique-id');
 var AWS = require('aws-sdk');
 const { sectionData } = require("../../services/DefaultData");
 AWS.config.apiVersions = {
@@ -13,6 +14,10 @@ var route53 = new AWS.Route53({ accessKeyId: process.env.AWS_ACCESS_KEY_ID,
 exports.signUp = async (req, res) => {
   let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
   const { firstName, lastName, email, mobile, password,theme } =req.body;
+  const id = generateUniqueId({
+    length: 5,
+    useLetters: false
+  });
   try {
     const existingUser = await edtechAdminDb.findOne({ email });
     if (existingUser)
@@ -21,14 +26,14 @@ exports.signUp = async (req, res) => {
     const salt = await bcrypt.genSaltSync(10);
     console.log(password);
     const hashedPassword = await bcrypt.hash(password, salt);
-
+let subdomain=firstName.toLowerCase()+id;
     const result =await edtechAdminDb.insertOne({
       email,
       mobile,
       password: hashedPassword,
       firstName,
       lastName,
-      subdomain:firstName,theme
+      subdomain:subdomain,theme
     });
     let sectionCollection=await baseModel.mongoConnect(firstName,'homepage')
   

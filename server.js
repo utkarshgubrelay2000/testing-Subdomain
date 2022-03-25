@@ -9,6 +9,7 @@ var sectionRouter = require('./routes/admin/section');
 var contactRouter = require('./routes/admin/contact');
 var courseRouter = require('./routes/admin/course');
 var categoryRouter = require('./routes/admin/category');
+var categorySRouter = require('./routes/category');
 var brandRouter = require('./routes/admin/brand');
 var userRouter = require('./routes/user');
 var studentRouter = require('./routes/student');
@@ -28,6 +29,7 @@ app.use(express.json())
 app.use('/auth', authRouter);
 app.use('/user/auth/', userAuthRouter);
 app.use('/user/section/', studentRouter);
+app.use('/user/category/', categorySRouter);
 app.use('/admin', userRouter);
 app.use('/admin/course', courseRouter);
 app.use('/admin/category', categoryRouter);
