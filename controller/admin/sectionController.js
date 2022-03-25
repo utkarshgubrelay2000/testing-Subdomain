@@ -82,3 +82,20 @@ exports.editSection = async (req, res) => {
     
    
 };
+exports.deleteSection = async (req, res) => {
+    const {id} =req.params;
+   
+      try {
+      //    let sectionCollection=await baseModel.mongoConnect(subdomain,section)
+          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
+          id=ObjectId(id)
+          const result =await sectionCollection.findOneAndDelete({_id:id});
+          console.log('result',result,id);
+            res.json({ error:false, data: "Section deleted successfully" });
+        } catch (error) {
+
+            res.status(500).json({error:true, data: error.message });
+        }
+    
+   
+}

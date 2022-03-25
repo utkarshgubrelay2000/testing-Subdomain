@@ -3,11 +3,13 @@ const app=express()
 const cors = require("cors")
 require("dotenv").config({path:"./config/config.env"});
 const bodyParser = require('body-parser');
-var authRouter = require('./routes/Auth');
+var authRouter = require('./routes/admin/Auth');
 var userAuthRouter = require('./routes/userAuth');
-var sectionRouter = require('./routes/section');
-var contactRouter = require('./routes/contact');
-var brandRouter = require('./routes/brand');
+var sectionRouter = require('./routes/admin/section');
+var contactRouter = require('./routes/admin/contact');
+var courseRouter = require('./routes/admin/course');
+var categoryRouter = require('./routes/admin/category');
+var brandRouter = require('./routes/admin/brand');
 var userRouter = require('./routes/user');
 var studentRouter = require('./routes/student');
 let mongoServer=require('./model/clientConnection')
@@ -27,6 +29,8 @@ app.use('/auth', authRouter);
 app.use('/user/auth/', userAuthRouter);
 app.use('/user/section/', studentRouter);
 app.use('/admin', userRouter);
+app.use('/admin/course', courseRouter);
+app.use('/admin/category', categoryRouter);
 app.use('/section', sectionRouter);
 app.use('/brand', brandRouter);
 app.use('/contact', contactRouter);
