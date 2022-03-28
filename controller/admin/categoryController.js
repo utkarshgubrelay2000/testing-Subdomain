@@ -32,16 +32,10 @@ exports.getCategoryById = async (req, res) => {
   }
 };
 exports.getCategory = async (req, res) => {
-  let subdomain = await getSubDomain(req.get("origin"));
-  // check for localhost'
-  console.log("subdomain", subdomain);
-
-  if (subdomain == "localhost" && subdomain) {
-    return res.json({ error: true, data: "No Subdomain" });
-  } else if (checkSubDomainExist(subdomain)) {
+  
     try {
       let categoryCollection = await baseModel.mongoConnect(
-        subdomain,
+        req.subdomain,
         "Category"
       );
       const result = await categoryCollection.find({}).toArray();
@@ -49,9 +43,7 @@ exports.getCategory = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });
     }
-  } else {
-    res.status(500).json({ error: true, data: "Origin host not Found" });
-  }
+  
 };
 exports.addCategory = async (req, res) => {
   const categoryData =req.body;
