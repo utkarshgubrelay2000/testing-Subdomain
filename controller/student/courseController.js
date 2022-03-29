@@ -15,7 +15,7 @@ exports.getCourseById = async (req, res) => {
     let subdomain = await getSubDomain(req.get("origin"));
     if (checkSubDomainExist(subdomain)) {
       let courseCollection = await baseModel.mongoConnect(
-        req.subdomain,
+        subdomain,
         "course"
       );
 
