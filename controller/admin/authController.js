@@ -33,7 +33,7 @@ let subdomain=firstName.toLowerCase()+id;
       password: hashedPassword,
       firstName,
       lastName,
-      subdomain:subdomain,theme
+      subdomain:subdomain,theme,role:'admin'
     });
     let sectionCollection=await baseModel.mongoConnect(firstName,'homepage')
   
@@ -64,38 +64,39 @@ exports.signIn = async (req, res) => {
       return res.status(400).json({error:true, message: "Invalid password" });
 //console.log(existingUser);
     const token = jwt.sign(
-      { email: existingUser.email, id: existingUser._id,subdomain:existingUser.firstName },
+      { email: existingUser.email, id: existingUser._id,subdomain:existingUser.subdomain },
       "test",
       { expiresIn: "240h" }
     );
-//     var subDomainName = existingUser.firstName;
+    var subDomainName = existingUser.firstName;
 
-// var params = {
-//   ChangeBatch: {
-//     Changes: [
-//       {
-//         Action: "CREATE",
-//         ResourceRecordSet: {
-//           AliasTarget: { 
-//             DNSName: "testbrandwick.com",
-//             EvaluateTargetHealth: false,
-//             HostedZoneId: "Z09497883BWP3MGTKYB6W" 
-//           },
-//           Name: "jay"+".testbrandwick.com",
-//           Type: "A"
-//         }
-//       }],
-//       },
+var params = {
+  ChangeBatch: {
+    Changes: [
+      {
+        Action: "CREATE",
+        ResourceRecordSet: {
+          AliasTarget: { 
+            DNSName: "eduonboard.xyz",
+            EvaluateTargetHealth: false,
+            HostedZoneId: "Z10151361C6U4ZL70JPJF" 
+          },
+          Name: "subDomainName"+".eduonboard.xyz",
+          Type: "A"
+        }
+      }],
+      },
   
-//       HostedZoneId: "Z09497883BWP3MGTKYB6W",// Depends on the type of resource that you want to route traffic to
-//      };
-//      route53.changeResourceRecordSets(params, function(err, data) {
+      HostedZoneId: "Z10151361C6U4ZL70JPJF",// Depends on the type of resource that you want to route traffic to
+     };
+     route53.changeResourceRecordSets(params, function(err, data) {
 
-//       if (err) console.log(err.stack); // an error occurred
+      if (err) console.log(err); // an error occurred
       
-//       else console.log(data);
-//     });
-    res.status(200).json({error:false, result: existingUser, token });
+      else console.log(data);
+    });
+   
+res.status(200).json({error:false, result: existingUser, token });
   
   } catch (err) {
     console.log("Error is", err);

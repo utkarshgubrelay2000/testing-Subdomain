@@ -2,13 +2,13 @@ const nodemailer =require("nodemailer")
 
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "*******",
-      pass: "*******",
-    },
-    from: "****",
-  });
+  service: "gmail",
+  auth: {
+    user: "noreplyaslichandi@gmail.com",
+    pass: "sh20sh18",
+  },
+  from:"noreplyaslichandi@gmail.com"
+});
   transporter.verify(function (error, success) {
     if (error) {
       console.log("error in setting transporter", error);
