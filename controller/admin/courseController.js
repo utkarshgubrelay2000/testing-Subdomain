@@ -71,7 +71,10 @@ let categoryId=ObjectId(courseData.categoryId);
 exports.editCourse = async (req, res) => {
   const courseData =req.body;
   let {id} =req.params;
-
+if(courseData.categoryId){
+  let categoryId=ObjectId(courseData.categoryId);
+  courseData.categoryId=categoryId;
+}
 
     try {
     //    let courseCollection=await baseModel.mongoConnect(subdomain,course)
