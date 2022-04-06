@@ -217,7 +217,7 @@ let subdomain = req.subdomain
 
 
 if(students && students.length>0){
- await studentCollection.updateMany({_id:{$in:students}},{$set:{group:group}})
+ await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:group}})
  let datastudents=await Student.find({_id:{$in:students}})
  for (let index = 0; index < datastudents.length; index++) {
    const element = datastudents[index];
@@ -360,7 +360,7 @@ margin-left:10px;
     </html>
   `,
   };
-   sendMail(element.name,element.email)
+   sendMail(toSubsciberMail)
  }
  await GroupModel.findByIdAndUpdate(group,{$addToSet:{students:students}})
 }
@@ -371,3 +371,24 @@ console.log(error)
       
 }
 };
+exports.removeStudentsFromGroup = async (req, res) => {
+  let {groupId,studentId} = req.body;
+  try {
+    
+  
+let subdomain = req.subdomain
+    console.log("subdomain", subdomain);
+    let studentCollection = await baseModel.mongoConnect(
+      req.subdomain,
+      "users"
+    );
+    let groupModel = await baseModel.mongoConnect(
+      req.subdomain,
+      "groups"
+    );
+    let group=await groupModel.findByIdAndUpdate(groupId,{$pull:{students:studentId}})
+    let student=await studentCollection.findByIdAndUpdate(studentId,{$pull:{group:groupId}})
+  } catch (error) {
+    res.status(503).json({error:true,data:'Some Error Occured',message:error.message})
+  }
+}
