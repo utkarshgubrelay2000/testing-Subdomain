@@ -197,6 +197,7 @@ margin-left:10px;
 exports.addStudentsToGroup = async (req, res) => {
   try { 
 let {group,students} = req.body;
+ group=ObjectId(group)
 let subdomain = req.subdomain
     console.log("subdomain", subdomain);
   
@@ -217,9 +218,10 @@ let subdomain = req.subdomain
 
 
 if(students && students.length>0){
- await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:group}})
  let datastudents=await Student.find({_id:{$in:students}})
+ students=[]
  for (let index = 0; index < datastudents.length; index++) {
+   students.push(ObjectId(datastudents[index]._id))
    const element = datastudents[index];
    let toSubsciberMail = {
     to: element.email,
@@ -363,6 +365,8 @@ margin-left:10px;
    sendMail(toSubsciberMail)
  }
  await GroupModel.findByIdAndUpdate(group,{$addToSet:{students:students}})
+ await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:group}})
+
 }
 res.status(201).json({error:false,data:"created"})
 } catch (error) {
