@@ -1,21 +1,26 @@
 const nodemailer =require("nodemailer")
+const AWS =require("aws-sdk")
 
+console.log(process.env.AWS_ACCESS_KEY_ID)
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: "ap-south-1"
+});
+
+const ses = new AWS.SES();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "noreplyaslichandi@gmail.com",
-    pass: "sh20sh18",
-  },
-  from:"noreplyaslichandi@gmail.com"
+  SES: ses,
+ 
 });
-  transporter.verify(function (error, success) {
-    if (error) {
-      console.log("error in setting transporter", error);
-    } else {
-      console.log("Server is ready to take our messages");
-    }
-  });
+transporter.verify(function(error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
+});
   exports.sendMail = (mailOptions) => {
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {

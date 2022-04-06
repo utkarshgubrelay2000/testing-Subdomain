@@ -13,6 +13,7 @@ var categoryRouter = require('./routes/admin/category');
 var categorySRouter = require('./routes/category');
 var brandRouter = require('./routes/admin/brand');
 var userRouter = require('./routes/admin/user');
+var orderRouter = require('./routes/user');
 var studentRouter = require('./routes/student');
 let mongoServer=require('./model/clientConnection')
 var busboy = require('connect-busboy');
@@ -38,6 +39,7 @@ app.use('/admin/category', categoryRouter);
 app.use('/section', sectionRouter);
 app.use('/brand', brandRouter);
 app.use('/contact', contactRouter);
+app.use('/user/order', orderRouter);
 
 
 

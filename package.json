@@ -28,6 +28,7 @@
     "nodemailer": "^6.4.17",
     "nodemon": "^2.0.6",
     "otp-generator": "^2.0.0",
+    "razorpay": "^2.8.1",
     "sha256": "^0.2.0",
     "validate.js": "^0.13.1"
   }

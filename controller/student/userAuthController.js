@@ -94,3 +94,32 @@ console.log(existingUser);
     console.log(err.message);
   }
 };
+exports.createNewPassword=async (req,res)=>{
+  try {
+    let subdomain = await getSubDomain(req.get("origin"));
+    if (checkSubDomainExist(subdomain)) {
+  let edtechAdminDb=await baseModel.mongoConnect(subdomain,'users');
+let token=req.params.token;
+  let  decodedData = jwt.verify(token, "test");
+  let userId=ObjectId(decodedData.id)
+// let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users');
+  let user=await edtechAdminDb.findOne({_id:userId})
+      if (!user) {
+        res.status(400).json({error:false,data:"token expires"});
+        //console.log("jjj", user.expireToken, Date.now());
+      } else {
+        bcrypt.hash(req.body.password, 12).then((newpassword) => {
+          edtechAdminDb.updateOne({_id:userId},{$set:{password:newpassword}})
+          res.status(200).json({error:false,message:"Password changed successfully"})
+         
+        });
+      }
+    }
+    else{
+      res.status(400).json({error:true,message:"Subdomain not found"})
+    }   
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({error:true,message:"Something's wrong"})
+  }
+}
