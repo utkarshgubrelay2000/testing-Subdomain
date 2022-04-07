@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
-var studentController=require('../controller/student/studentController');
+var sectionController=require('../controller/student/sectionController');
 
 /* GET home page. */
 
-router.get('/',studentController.getSection,err=>{
+router.get('/',sectionController.getSection,err=>{
     console.log('error while signup user')
   })
-  router.get('/:id',studentController.getSectionById,err=>{
+  router.get('/:id',sectionController.getSectionById,err=>{
     console.log('error while signup user')
   })
 

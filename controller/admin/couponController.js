@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const baseModel = require("../../model/baseModel");
 
-exports.getcouponById = async (req, res) => {
+exports.getCouponById = async (req, res) => {
   let { id } = req.params;
 
   // get subdomain
@@ -26,7 +26,7 @@ exports.getcouponById = async (req, res) => {
     res.status(500).json({ error: true, data: error.message });
   }
 };
-exports.getcoupon = async (req, res) => {
+exports.getCoupon = async (req, res) => {
   let subdomain = req.subdomain
   console.log("subdomain", subdomain);
   // check for localhost'
@@ -43,16 +43,16 @@ exports.getcoupon = async (req, res) => {
     }
   
 };
-exports.addcoupon = async (req, res) => {
+exports.addCoupon = async (req, res) => {
   const couponData =req.body;
 
-let categoryId=ObjectId(couponData.categoryId);
+
     try {
       
         let couponCollection=await baseModel.mongoConnect(req.subdomain,'coupon')
 
         const result =await couponCollection.insertOne({
-            ...couponData,categoryId
+            ...couponData
           });
           res.json({ error:false, data: "coupon created successfully" });
       } catch (error) {
@@ -64,7 +64,7 @@ let categoryId=ObjectId(couponData.categoryId);
 
 
 };
-exports.editcoupon = async (req, res) => {
+exports.editCoupon = async (req, res) => {
   const couponData =req.body;
   let {id} =req.params;
 
@@ -84,7 +84,7 @@ exports.editcoupon = async (req, res) => {
   
  
 };
-exports.deletecoupon = async (req, res) => {
+exports.deleteCoupon = async (req, res) => {
   const {id} =req.params;
  
     try {

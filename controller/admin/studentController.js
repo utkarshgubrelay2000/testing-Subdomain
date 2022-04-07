@@ -17,7 +17,7 @@ exports.inviteStudent=async(req,res,next)=>{
     
  console.log(req.subdomain,req.userId)
   let {email,mobile,firstName,lastName}=req.body
-  let edtechAdminDb=await baseModel.mongoConnect(req.subdomain,'users');
+  let edtechAdminDb=await baseModel.mongoConnect(req.subdomain,'students');
   req.userId=ObjectId(req.userId)
   let userDetails=await edtechAdminDb.findOne({_id:req.userId });
 console.log(userDetails)
@@ -28,7 +28,7 @@ console.log(userDetails)
       // password: hashedPassword,
       firstName,
       lastName,
-      subdomain:req.subdomain,theme:userDetails.theme,role:'teacher'
+  
     });
    // result.save()
    let existingUser=await edtechAdminDb.findOne({email:email})
@@ -209,11 +209,11 @@ let subdomain = req.subdomain
     groupAdmin=groupAdmin.findOne({_id:userId})
       let studentCollection = await baseModel.mongoConnect(
         req.subdomain,
-        "users"
+        "students"
       );
       let groupModel = await baseModel.mongoConnect(
         req.subdomain,
-        "groups"
+        "group"
       );
 
 
@@ -384,11 +384,11 @@ let subdomain = req.subdomain
     console.log("subdomain", subdomain);
     let studentCollection = await baseModel.mongoConnect(
       req.subdomain,
-      "users"
+      "students"
     );
     let groupModel = await baseModel.mongoConnect(
       req.subdomain,
-      "groups"
+      "group"
     );
     let group=await groupModel.findByIdAndUpdate(groupId,{$pull:{students:studentId}})
     let student=await studentCollection.findByIdAndUpdate(studentId,{$pull:{group:groupId}})

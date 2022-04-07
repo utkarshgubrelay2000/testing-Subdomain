@@ -40,10 +40,23 @@ exports.getCourse = async (req, res) => {
         subdomain,
         "course"
       );
-      const result = await courseCollection.find({}).toArray();
+      const result = await courseCollection.aggregate([
+        {
+          $lookup: {
+            from: "Category",
+            localField: "categoryId",
+            foreignField: "_id",
+            as: "categoryId",},
+          
+            $unwind:  "$categoryId",
+            
+           // },
+          },
+          ]).toArray()
+   //   const result = await courseCollection.find({}).toArray().populate('categoryId')
       res.json({ error: false, data: result });
     } catch (error) {
-      res.status(500).json({ error: true, data: error.data });
+      res.status(500).json({ error: true, data: error.message });
     }
   
 };
