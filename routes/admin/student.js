@@ -3,13 +3,13 @@ var router = express.Router();
 var studentController=require('../../controller/admin/studentController');
 const  verifyAdmin = require('../../middleware/auth');
 /* GET home page. */
-router.put('/',verifyAdmin.auth,studentController.inviteStudent,err=>{
+router.put('/invite',verifyAdmin.auth,studentController.inviteStudent,err=>{
   console.log('error while signup user')
 })
-router.put('/:id',verifyAdmin.auth,studentController.removeStudentsFromGroup,err=>{
+router.put('/remove-from-group',verifyAdmin.auth,studentController.removeStudentsFromGroup,err=>{
   console.log('error while signup user')
 })
-router.put('/:id',verifyAdmin.auth,studentController.addStudentsToGroup,err=>{
+router.put('/add-to-group',verifyAdmin.auth,studentController.addStudentsToGroup,err=>{
     console.log('error while signup user')
   })
 

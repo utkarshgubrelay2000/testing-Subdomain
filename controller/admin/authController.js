@@ -70,31 +70,31 @@ exports.signIn = async (req, res) => {
     );
     var subDomainName = existingUser.firstName;
 
-var params = {
-  ChangeBatch: {
-    Changes: [
-      {
-        Action: "CREATE",
-        ResourceRecordSet: {
-          AliasTarget: { 
-            DNSName: "eduonboard.xyz",
-            EvaluateTargetHealth: false,
-            HostedZoneId: "Z10151361C6U4ZL70JPJF" 
-          },
-          Name: "subDomainName"+".eduonboard.xyz",
-          Type: "A"
-        }
-      }],
-      },
+// var params = {
+//   ChangeBatch: {
+//     Changes: [
+//       {
+//         Action: "CREATE",
+//         ResourceRecordSet: {
+//           AliasTarget: { 
+//             DNSName: "eduonboard.xyz",
+//             EvaluateTargetHealth: false,
+//             HostedZoneId: "Z10151361C6U4ZL70JPJF" 
+//           },
+//           Name: "subDomainName"+".eduonboard.xyz",
+//           Type: "A"
+//         }
+//       }],
+//       },
   
-      HostedZoneId: "Z10151361C6U4ZL70JPJF",// Depends on the type of resource that you want to route traffic to
-     };
-     route53.changeResourceRecordSets(params, function(err, data) {
+//       HostedZoneId: "Z10151361C6U4ZL70JPJF",// Depends on the type of resource that you want to route traffic to
+//      };
+//      route53.changeResourceRecordSets(params, function(err, data) {
 
-      if (err) console.log(err); // an error occurred
+    //   if (err) console.log(err); // an error occurred
       
-      else console.log(data);
-    });
+    //   else console.log(data);
+    // });
    
 res.status(200).json({error:false, result: existingUser, token });
   

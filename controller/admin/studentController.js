@@ -4,7 +4,7 @@ const { sendMail } = require('../../services/mailService');
 var jwt=require('jsonwebtoken')
 const bcrypt = require("bcryptjs");
 const baseModel = require('../../model/baseModel');
-const { ObjectId } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_USER_ACCESS_KEY,
@@ -17,12 +17,13 @@ exports.inviteStudent=async(req,res,next)=>{
     
  console.log(req.subdomain,req.userId)
   let {email,mobile,firstName,lastName}=req.body
-  let edtechAdminDb=await baseModel.mongoConnect(req.subdomain,'students');
+  let edtechAdminDb=await baseModel.mongoConnect('edtechAdmin','users')
+  let studentDb=await baseModel.mongoConnect('edtechAdmin','users')
   req.userId=ObjectId(req.userId)
   let userDetails=await edtechAdminDb.findOne({_id:req.userId });
 console.log(userDetails)
 //edtechAdminDb.updateMany({},{$set:{role:"admin"}})
-    const result =await edtechAdminDb.insertOne({
+    const result =await studentDb.insertOne({
       email,
       mobile,
       // password: hashedPassword,
@@ -31,16 +32,17 @@ console.log(userDetails)
   
     });
    // result.save()
-   let existingUser=await edtechAdminDb.findOne({email:email})
+   console.log(result)
+  // let existingUser=await edtechAdminDb.findOne({email:email})
     const token = jwt.sign(
-      { email: email, id: existingUser._id,subdomain:existingUser.firstName },
+      { email: email, id: result.insertedId },
       "test",
       { expiresIn: "240h" }
     );
     let link='http://localhost:3000/invitation-login/'+token
     let toSubsciberMail = {
-      to: email,
-      from: "noreplyaslichandi@gmail.com",
+      to: "gubrelayutkarsh2000@gmail.com",
+      from: "gubrelayutkarsh2000@gmail.com",
       subject: " Teacher invitation",
       html: `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml">
@@ -196,8 +198,8 @@ margin-left:10px;
 
 exports.addStudentsToGroup = async (req, res) => {
   try { 
-let {group,students} = req.body;
- group=ObjectId(group)
+let {groupId,students} = req.body;
+groupId=ObjectId(groupId)
 let subdomain = req.subdomain
     console.log("subdomain", subdomain);
   
@@ -218,10 +220,12 @@ let subdomain = req.subdomain
 
 
 if(students && students.length>0){
- let datastudents=await Student.find({_id:{$in:students}})
- students=[]
+  let studentsIds=students.map(student=>ObjectId(student))
+  students=studentsIds
+  let datastudents=await studentCollection.find({_id:{$in:students}}).toArray()
+ console.log("datastudents",datastudents,students)
  for (let index = 0; index < datastudents.length; index++) {
-   students.push(ObjectId(datastudents[index]._id))
+  
    const element = datastudents[index];
    let toSubsciberMail = {
     to: element.email,
@@ -361,14 +365,14 @@ margin-left:10px;
      </div> </body>
     </html>
   `,
-  };
-   sendMail(toSubsciberMail)
+  };//
+   //sendMail(toSubsciberMail)
  }
- await GroupModel.findByIdAndUpdate(group,{$addToSet:{students:students}})
- await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:group}})
+ await groupModel.findOneAndUpdate({_id:groupId},{$addToSet:{students:{$each:students}}},{multi:true})
+ await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:groupId}},{multi:true})
 
 }
-res.status(201).json({error:false,data:"created"})
+res.status(201).json({error:false,data:"Added"})
 } catch (error) {
 console.log(error)
   res.status(503).json({error:true,data:'Some Error Occured'})
@@ -390,8 +394,12 @@ let subdomain = req.subdomain
       req.subdomain,
       "group"
     );
-    let group=await groupModel.findByIdAndUpdate(groupId,{$pull:{students:studentId}})
-    let student=await studentCollection.findByIdAndUpdate(studentId,{$pull:{group:groupId}})
+    groupId=ObjectId(groupId)
+    studentId=ObjectId(studentId)
+    let group=await groupModel.findOne({_id:groupId},{$pull:{students:studentId}})
+    console.log(studentId)
+    let student=await studentCollection.findOneAndUpdate({_id:studentId},{$pull:{group:groupId}})
+    res.json({error:false,data:"Removed"})
   } catch (error) {
     res.status(503).json({error:true,data:'Some Error Occured',message:error.message})
   }
