@@ -10,7 +10,8 @@ class baseModel {
         let client = await connectionModel.getClient();
         //console.log(client)
         let db = client.db(dbName);
-        let Model = db.Model(ModelName);
+  
+        let Model = db.collection(ModelName);
         return Model;
     }
 
