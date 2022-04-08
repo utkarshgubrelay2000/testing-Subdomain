@@ -5,6 +5,6 @@ const userController=require('../../controller/student/orderController');
 const { auth } = require('../../middleware/auth');
 
 
-router.patch('/',userController.createOrder)
+router.put('/',userController.createOrder)
 
 module.exports=router
