@@ -267,13 +267,26 @@ let token=req.params.token;
     console.log(error);
   }
 }
+exports.getPaymentDetails=async (req,res)=>{
+  try {
+   
+    let edtechAdminDb=await baseModel.mongoConnect(req.subdomain,'paymentDetails');
+    let user=await edtechAdminDb.findOne({type:req.params.type})
+    console.log(req.subdomain)
+  
+      res.status(200).json({error:false,data:user})
+   
+  } catch (error) {
+    res.status(400).json({error:true,message:error.message})
+  }
+}
 exports.paymentDetails=async (req,res)=>{
   try {
-    let {razorpayKey,razorpaySecret}=req.body;
-    console.log(req.subdomain)
+    let {key,secret}=req.body;
+    console.log(req.subdomain,req.params)
     let edtechAdminDb=await baseModel.mongoConnect(req.subdomain,'paymentDetails');
-    let user=await edtechAdminDb.updateMany({}
-,{$set:{razorpayKey:razorpayKey,razorpaySecret:razorpaySecret}},{upsert:true,new:true})
+    let user=await edtechAdminDb.updateMany({type:req.params.type}
+,{$set:{key:key,secret:secret}},{upsert:true,new:true})
     
     if(user){
       res.status(200).json({error:false,data:user})
