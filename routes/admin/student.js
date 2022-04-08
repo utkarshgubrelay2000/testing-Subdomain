@@ -9,7 +9,7 @@ router.put('/invite',verifyAdmin.auth,studentController.inviteStudent,err=>{
 router.put('/remove-from-group',verifyAdmin.auth,studentController.removeStudentsFromGroup,err=>{
   console.log('error while signup user')
 })
-router.put('/add-to-group',verifyAdmin.auth,studentController.addStudentsToGroup,err=>{
+router.put('/add-in-group',verifyAdmin.auth,studentController.addStudentsToGroup,err=>{
     console.log('error while signup user')
   })
 

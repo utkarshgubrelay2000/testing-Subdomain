@@ -5,7 +5,7 @@ exports.groupRouter = require('./routes/admin/group');
 exports.courseRouter = require('./routes/admin/course');
 exports.couponRouter = require('./routes/admin/coupon');
 exports.studentRouter = require('./routes/admin/student');
-exports.studentRouter = require('./routes/admin/');
+exports.eventRouter = require('./routes/admin/event');
 exports.categoryRouter = require('./routes/admin/category');
 
 /// Student Routing

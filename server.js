@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config({ path: "./config/config.env" });
 const bodyParser = require("body-parser");
-var {
+var {eventRouter,
   authAdmin,
   brandRouter,
   categoryRouter,
@@ -42,6 +42,7 @@ app.use("/admin/course", courseRouter);
 app.use("/admin/coupon", couponRouter);
 app.use("/admin/student", studentRouter);
 app.use("/admin/group", groupRouter);
+app.use("/admin/event", eventRouter);
 app.use("/admin/category", categoryRouter);
 
 // All student routes

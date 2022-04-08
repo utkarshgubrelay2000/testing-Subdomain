@@ -96,3 +96,67 @@ exports.deleteGroup = async (req, res) => {
   
  
 }
+
+exports.addGroupsToEvent = async (req, res) => {
+  try { 
+let {event,groups} = req.body;
+event=ObjectId(event)
+let subdomain = req.subdomain
+  console.log(subdomain)
+   
+      let eventModel = await baseModel.mongoConnect(
+        subdomain,
+        "event"
+      );
+      let groupModel = await baseModel.mongoConnect(
+        subdomain,
+        "group"
+      );
+
+
+if(groups && groups.length>0){
+  let groupIds=groups.map(group=>ObjectId(group))
+  groups=groupIds
+
+ await eventModel.findOneAndUpdate({_id:event},{$addToSet:{groups:{$each:groups}}},{multi:true})
+ await groupModel.updateMany({_id:{$in:groups}},{$addToSet:{event:event}},{multi:true})
+
+}
+res.status(201).json({error:false,data:"Added"})
+} catch (error) {
+console.log(error)
+  res.status(503).json({error:true,data:'Some Error Occured'})
+      
+}
+};
+exports.removeFromEvent = async (req, res) => {
+  try { 
+let {event,groupId} = req.body;
+event=ObjectId(event)
+let subdomain = req.subdomain
+
+      let eventModel = await baseModel.mongoConnect(
+        subdomain,
+        "event"
+      );
+      let groupModel = await baseModel.mongoConnect(
+        subdomain,
+        "group"
+      );
+
+
+
+
+      groupId=ObjectId(groupId)
+
+ await eventModel.findOneAndUpdate({_id:event},{$pull:{groups:groupId}},{multi:true})
+ await groupModel.findOneAndUpdate({_id:groupId},{$pull:{event:event}},{multi:true})
+
+
+res.status(201).json({error:false,data:"Removed"})
+} catch (error) {
+console.log(error)
+  res.status(503).json({error:true,data:'Some Error Occured'})
+      
+}
+};
