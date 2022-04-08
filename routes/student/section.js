@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var sectionController=require('../controller/student/sectionController');
+var sectionController=require('../../controller/student/sectionController');
 
 /* GET home page. */
 

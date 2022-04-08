@@ -4,20 +4,20 @@ const cors = require("cors")
 require("dotenv").config({path:"./config/config.env"});
 const bodyParser = require('body-parser');
 var authRouter = require('./routes/admin/Auth');
-var userAuthRouter = require('./routes/userAuth');
+var userAuthRouter = require('./routes/student/userAuth');
 var sectionRouter = require('./routes/admin/section');
 var contactRouter = require('./routes/admin/contact');
 var groupRouter = require('./routes/admin/group');
 var courseRouter = require('./routes/admin/course');
-var courseSRouter = require('./routes/course');
+var courseSRouter = require('./routes/student/course');
 var couponRouter = require('./routes/admin/coupon');
 var studentRouter = require('./routes/admin/student');
 var categoryRouter = require('./routes/admin/category');
-var categorySRouter = require('./routes/category');
+var categorySRouter = require('./routes/student/category');
 var brandRouter = require('./routes/admin/brand');
 var userRouter = require('./routes/admin/user');
-var orderRouter = require('./routes/user');
-var sectionRouter = require('./routes/section');
+var orderRouter = require('./routes/student/user');
+var sectionRouter = require('./routes/student/section');
 let mongoServer=require('./model/clientConnection')
 var busboy = require('connect-busboy');
 app.use(busboy());
