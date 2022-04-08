@@ -12,8 +12,8 @@ exports.getbrandById = async (req, res) => {
    
       try {
           
-          let brandCollection=await baseModel.mongoConnect(req.subdomain,"brand")
-          const result =await brandCollection.findOne({_id:id});
+          let brandModel=await baseModel.mongoConnect(req.subdomain,"brand")
+          const result =await brandModel.findOne({_id:id});
           console.log('stop');
 
             res.json({ error:false, data: result });
@@ -25,8 +25,8 @@ exports.getbrandById = async (req, res) => {
 exports.getbrand = async (req, res) => {
   
       try {
-          let brandCollection=await baseModel.mongoConnect(req.subdomain,"brand")
-          const result =await brandCollection.find({}).toArray()
+          let brandModel=await baseModel.mongoConnect(req.subdomain,"brand")
+          const result =await brandModel.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
@@ -44,8 +44,8 @@ exports.addbrand = async (req, res) => {
 
   
       try {
-          let brandCollection=await baseModel.mongoConnect(req.subdomain,"brand")
-          const result =await brandCollection.insertOne({
+          let brandModel=await baseModel.mongoConnect(req.subdomain,"brand")
+          const result =await brandModel.insertOne({
               ...brandData,
             });
             res.json({ error:false, data: "brand created successfully" });
@@ -61,9 +61,9 @@ exports.editbrand = async (req, res) => {
     let {id} =req.params;
  
       try {
-          let brandCollection=await baseModel.mongoConnect(subdomain,"brand")
+          let brandModel=await baseModel.mongoConnect(subdomain,"brand")
           id=ObjectId(id)
-          const result =await brandCollection.findOneAndUpdate({_id:id},{$set:brandData});
+          const result =await brandModel.findOneAndUpdate({_id:id},{$set:brandData});
           console.log('result',result,id);
             res.json({ error:false, data: "brand updated successfully" });
         } catch (error) {

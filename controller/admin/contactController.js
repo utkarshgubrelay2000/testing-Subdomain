@@ -18,8 +18,8 @@ exports.getcontactById = async (req, res) => {
    
       try {
           console.log('start');
-          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
-          const result =await contactCollection.findOne({_id:id});
+          let contactModel=await baseModel.mongoConnect(req.subdomain,"contact")
+          const result =await contactModel.findOne({_id:id});
           console.log('stop');
 
             res.json({ error:false, data: result });
@@ -38,8 +38,8 @@ exports.getcontact = async (req, res) => {
 
    
       try {
-          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
-          const result =await contactCollection.find({}).toArray()
+          let contactModel=await baseModel.mongoConnect(req.subdomain,"contact")
+          const result =await contactModel.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
@@ -57,8 +57,8 @@ exports.addcontact = async (req, res) => {
     
 
       try {
-          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
-          const result =await contactCollection.insertOne({
+          let contactModel=await baseModel.mongoConnect(req.subdomain,"contact")
+          const result =await contactModel.insertOne({
               ...contactData,
             });
             res.json({ error:false, data: "contact created successfully" });
@@ -75,9 +75,9 @@ exports.editcontact = async (req, res) => {
   
    
       try {
-          let contactCollection=await baseModel.mongoConnect(req.subdomain,"contact")
+          let contactModel=await baseModel.mongoConnect(req.subdomain,"contact")
           id=ObjectId(id)
-          const result =await contactCollection.findOneAndUpdate({_id:id},{$set:contactData});
+          const result =await contactModel.findOneAndUpdate({_id:id},{$set:contactData});
           console.log('result',result,id);
             res.json({ error:false, data: "contact updated successfully" });
         } catch (error) {

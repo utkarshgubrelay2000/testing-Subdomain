@@ -14,12 +14,12 @@ exports.getCategoryById = async (req, res) => {
   try {
     let subdomain = await getSubDomain(req.get("origin"));
     if (checkSubDomainExist(subdomain)) {
-      let categoryCollection = await baseModel.mongoConnect(
+      let categoryModel = await baseModel.mongoConnect(
         req.subdomain,
         "Category"
       );
 
-      const result = await categoryCollection.findOne({ _id: id });
+      const result = await categoryModel.findOne({ _id: id });
       console.log("stop");
 
       res.json({ error: false, data: result });
@@ -34,11 +34,11 @@ exports.getCategoryById = async (req, res) => {
 exports.getCategory = async (req, res) => {
   
     try {
-      let categoryCollection = await baseModel.mongoConnect(
+      let categoryModel = await baseModel.mongoConnect(
         req.subdomain,
         "Category"
       );
-      const result = await categoryCollection.find({}).toArray();
+      const result = await categoryModel.find({}).toArray();
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });
@@ -51,9 +51,9 @@ exports.addCategory = async (req, res) => {
 
     try {
       
-        let categoryCollection=await baseModel.mongoConnect(req.subdomain,'Category')
+        let categoryModel=await baseModel.mongoConnect(req.subdomain,'Category')
 
-        const result =await categoryCollection.insertOne({
+        const result =await categoryModel.insertOne({
             ...categoryData,
           });
           res.json({ error:false, data: "category created successfully" });
@@ -72,11 +72,11 @@ exports.editCategory = async (req, res) => {
 
 
     try {
-    //    let categoryCollection=await baseModel.mongoConnect(subdomain,category)
-        let categoryCollection=await baseModel.mongoConnect(req.subdomain,'Category')
+    //    let categoryModel=await baseModel.mongoConnect(subdomain,category)
+        let categoryModel=await baseModel.mongoConnect(req.subdomain,'Category')
 
         id=ObjectId(id)
-        const result =await categoryCollection.findOneAndUpdate({_id:id},{$set:categoryData});
+        const result =await categoryModel.findOneAndUpdate({_id:id},{$set:categoryData});
         console.log('result',result,id);
           res.json({ error:false, data: "category updated successfully" });
       } catch (error) {
@@ -91,9 +91,9 @@ exports.deleteCategory = async (req, res) => {
  
     try {
  
-        let categoryCollection=await baseModel.mongoConnect(req.subdomain,'Category')
+        let categoryModel=await baseModel.mongoConnect(req.subdomain,'Category')
         id=ObjectId(id)
-        const result =await categoryCollection.findOneAndDelete({_id:id});
+        const result =await categoryModel.findOneAndDelete({_id:id});
         console.log('result',result,id);
           res.json({ error:false, data: "category deleted successfully" });
       } catch (error) {

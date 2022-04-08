@@ -5,13 +5,13 @@ let connectionModel=require('./clientConnection')
 
 class baseModel {
     
-    static async mongoConnect(dbName,collectionName) {
+    static async mongoConnect(dbName,ModelName) {
    
         let client = await connectionModel.getClient();
         //console.log(client)
         let db = client.db(dbName);
-        let collection = db.collection(collectionName);
-        return collection;
+        let Model = db.Model(ModelName);
+        return Model;
     }
 
 }

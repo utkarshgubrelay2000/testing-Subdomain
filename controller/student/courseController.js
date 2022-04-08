@@ -14,12 +14,12 @@ exports.getCourseById = async (req, res) => {
   try {
     let subdomain = await getSubDomain(req.get("origin"));
     if (checkSubDomainExist(subdomain)) {
-      let courseCollection = await baseModel.mongoConnect(
+      let courseModel = await baseModel.mongoConnect(
         subdomain,
         "course"
       );
 
-      const result = await courseCollection.findOne({ _id: id });
+      const result = await courseModel.findOne({ _id: id });
       console.log("stop");
 
       res.json({ error: false, data: result });
@@ -40,11 +40,11 @@ exports.getCourse = async (req, res) => {
     return res.json({ error: true, data: "No Subdomain" });
   } else if (checkSubDomainExist(subdomain)) {
     try {
-      let courseCollection = await baseModel.mongoConnect(
+      let courseModel = await baseModel.mongoConnect(
         subdomain,
         "course"
       );
-      const result = await courseCollection.find({}).toArray();
+      const result = await courseModel.find({}).toArray();
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });

@@ -12,10 +12,10 @@ exports.getSectionById = async (req, res) => {
   
       try {
           console.log('start');
-        //  let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
+        //  let sectionModel=await baseModel.mongoConnect(subdomain,section)
+          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
 
-          const result =await sectionCollection.findOne({_id:id});
+          const result =await sectionModel.findOne({_id:id});
           console.log('stop');
 
             res.json({ error:false, data: result });
@@ -30,8 +30,8 @@ exports.getSection = async (req, res) => {
  console.log('subdomain',req.subdomain);
 
       try {
-          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
-          const result =await sectionCollection.find({}).toArray()
+          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
+          const result =await sectionModel.find({}).toArray()
             res.json({ error:false, data: result });
         } catch (error) {
 
@@ -47,9 +47,9 @@ exports.addSection = async (req, res) => {
   
       try {
         
-          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
+          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
 
-          const result =await sectionCollection.insertOne({
+          const result =await sectionModel.insertOne({
               ...sectionData,
             });
             res.json({ error:false, data: "Section created successfully" });
@@ -68,11 +68,11 @@ exports.editSection = async (req, res) => {
  
 
       try {
-      //    let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
+      //    let sectionModel=await baseModel.mongoConnect(subdomain,section)
+          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
 
           id=ObjectId(id)
-          const result =await sectionCollection.findOneAndUpdate({_id:id},{$set:sectionData});
+          const result =await sectionModel.findOneAndUpdate({_id:id},{$set:sectionData});
           console.log('result',result,id);
             res.json({ error:false, data: "Section updated successfully" });
         } catch (error) {
@@ -86,10 +86,10 @@ exports.deleteSection = async (req, res) => {
     const {id} =req.params;
    
       try {
-      //    let sectionCollection=await baseModel.mongoConnect(subdomain,section)
-          let sectionCollection=await baseModel.mongoConnect(req.subdomain,'homepage')
+      //    let sectionModel=await baseModel.mongoConnect(subdomain,section)
+          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
           id=ObjectId(id)
-          const result =await sectionCollection.findOneAndDelete({_id:id});
+          const result =await sectionModel.findOneAndDelete({_id:id});
           console.log('result',result,id);
             res.json({ error:false, data: "Section deleted successfully" });
         } catch (error) {

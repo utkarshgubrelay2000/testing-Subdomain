@@ -15,12 +15,12 @@ exports.getCourseById = async (req, res) => {
     let subdomain = req.subdomain
     console.log("subdomain", subdomain);
   
-      let courseCollection = await baseModel.mongoConnect(
+      let courseModel = await baseModel.mongoConnect(
         req.subdomain,
         "course"
       );
 
-      const result = await courseCollection.findOne({ _id: id });
+      const result = await courseModel.findOne({ _id: id });
       console.log("stop");
 
       res.json({ error: false, data: result });
@@ -36,11 +36,11 @@ exports.getCourse = async (req, res) => {
   // check for localhost'
   
     try {
-      let courseCollection = await baseModel.mongoConnect(
+      let courseModel = await baseModel.mongoConnect(
         subdomain,
         "course"
       );
-      const result = await courseCollection.aggregate([
+      const result = await courseModel.aggregate([
         {
           $lookup: {
             from: "Category",
@@ -53,7 +53,7 @@ exports.getCourse = async (req, res) => {
            // },
           },
           ]).toArray()
-   //   const result = await courseCollection.find({}).toArray().populate('categoryId')
+   //   const result = await courseModel.find({}).toArray().populate('categoryId')
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.message });
@@ -66,9 +66,9 @@ exports.addCourse = async (req, res) => {
 let categoryId=ObjectId(courseData.categoryId);
     try {
       
-        let courseCollection=await baseModel.mongoConnect(req.subdomain,'course')
+        let courseModel=await baseModel.mongoConnect(req.subdomain,'course')
 
-        const result =await courseCollection.insertOne({
+        const result =await courseModel.insertOne({
             ...courseData,categoryId
           });
           res.json({ error:false, data: "course created successfully" });
@@ -90,11 +90,11 @@ if(courseData.categoryId){
 }
 
     try {
-    //    let courseCollection=await baseModel.mongoConnect(subdomain,course)
-        let courseCollection=await baseModel.mongoConnect(req.subdomain,'course')
+    //    let courseModel=await baseModel.mongoConnect(subdomain,course)
+        let courseModel=await baseModel.mongoConnect(req.subdomain,'course')
 
         id=ObjectId(id)
-        const result =await courseCollection.findOneAndUpdate({_id:id},{$set:courseData});
+        const result =await courseModel.findOneAndUpdate({_id:id},{$set:courseData});
         console.log('result',result,id);
           res.json({ error:false, data: "course updated successfully" });
       } catch (error) {
@@ -109,9 +109,9 @@ exports.deleteCourse = async (req, res) => {
  
     try {
  
-        let courseCollection=await baseModel.mongoConnect(req.subdomain,'course')
+        let courseModel=await baseModel.mongoConnect(req.subdomain,'course')
         id=ObjectId(id)
-        const result =await courseCollection.findOneAndDelete({_id:id});
+        const result =await courseModel.findOneAndDelete({_id:id});
         console.log('result',result,id);
           res.json({ error:false, data: "course deleted successfully" });
       } catch (error) {

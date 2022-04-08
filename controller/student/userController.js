@@ -2,20 +2,17 @@ const { ObjectId } = require('mongodb');
 const baseModel=require('../../model/baseModel')
 const { getSubDomain,checkSubDomainExist } = require("../../services/subdomainServices");
 
-exports.getSectionById = async (req, res) => {
-   
-    let {id} =req.params;
-    
-    // get subdomain
-    id=ObjectId(id)
-  
+exports.getMyGroups = async (req, res) => {
+ 
+    let userId=ObjectId(req.userId)
+  console.log(userId)
       try {
         
 let subdomain=await getSubDomain(req.get('origin'))
 if(checkSubDomainExist(subdomain)){
-          let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
+          let groupModel=await baseModel.mongoConnect(req.subdomain,'group')
 
-          const result =await sectionModel.findOne({_id:id});
+          const result =await groupModel.find({'students':userId}).toArray();
           console.log('stop');
 
             res.json({ error:false, data: result });

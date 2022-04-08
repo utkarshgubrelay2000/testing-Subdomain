@@ -14,12 +14,12 @@ exports.getcouponById = async (req, res) => {
   try {
     let subdomain = await getSubDomain(req.get("origin"));
     if (checkSubDomainExist(subdomain)) {
-      let couponCollection = await baseModel.mongoConnect(
+      let couponModel = await baseModel.mongoConnect(
         req.subdomain,
         "coupon"
       );
 
-      const result = await couponCollection.findOne({ _id: id });
+      const result = await couponModel.findOne({ _id: id });
       console.log("stop");
 
       res.json({ error: false, data: result });
@@ -40,11 +40,11 @@ exports.getcoupon = async (req, res) => {
     return res.json({ error: true, data: "No Subdomain" });
   } else if (checkSubDomainExist(subdomain)) {
     try {
-      let couponCollection = await baseModel.mongoConnect(
+      let couponModel = await baseModel.mongoConnect(
         subdomain,
         "coupon"
       );
-      const result = await couponCollection.find({}).toArray();
+      const result = await couponModel.find({}).toArray();
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });

@@ -35,10 +35,10 @@ let subdomain=firstName.toLowerCase()+id;
       lastName,
       subdomain:subdomain,theme,role:'admin'
     });
-    let sectionCollection=await baseModel.mongoConnect(firstName,'homepage')
+    let sectionModel=await baseModel.mongoConnect(firstName,'homepage')
   
 
- await sectionCollection.insertOne({
+ await sectionModel.insertOne({
         ...sectionData,
       });
     res.status(200).json({ error:false, message: "User created successfully" });

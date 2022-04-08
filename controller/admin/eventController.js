@@ -10,12 +10,12 @@ exports.getEventById = async (req, res) => {
     let subdomain = req.subdomain
     console.log("subdomain", subdomain);
   
-      let eventCollection = await baseModel.mongoConnect(
+      let eventModel = await baseModel.mongoConnect(
         req.subdomain,
         "event"
       );
 
-      const result = await eventCollection.findOne({ _id: id });
+      const result = await eventModel.findOne({ _id: id });
   
 
       res.json({ error: false, data: result });
@@ -31,11 +31,11 @@ exports.getEvent = async (req, res) => {
   // check for localhost'
   
     try {
-      let eventCollection = await baseModel.mongoConnect(
+      let eventModel = await baseModel.mongoConnect(
         subdomain,
         "event"
       );
-      const result = await eventCollection.find({}).toArray();
+      const result = await eventModel.find({}).toArray();
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });
@@ -47,9 +47,9 @@ exports.addEvent = async (req, res) => {
 //console.log(req.subdomain)
     try {
       
-        let eventCollection=await baseModel.mongoConnect(req.subdomain,'event')
+        let eventModel=await baseModel.mongoConnect(req.subdomain,'event')
 
-        const result =await eventCollection.insertOne({
+        const result =await eventModel.insertOne({
             ...eventData
           });
           res.json({ error:false, data: "Event created successfully" });
@@ -66,10 +66,10 @@ exports.editEvent = async (req, res) => {
   const EventData =req.body;
   let {id} =req.params;
 try{
-        let eventCollection=await baseModel.mongoConnect(req.subdomain,'event')
+        let eventModel=await baseModel.mongoConnect(req.subdomain,'event')
 
         id=ObjectId(id)
-        const result =await eventCollection.findOneAndUpdate({_id:id},{$set:EventData});
+        const result =await eventModel.findOneAndUpdate({_id:id},{$set:EventData});
         console.log('result',result,id);
           res.json({ error:false, data: "Event updated successfully" });
       } catch (error) {
@@ -84,9 +84,9 @@ exports.deleteEvent = async (req, res) => {
  
     try {
  
-        let eventCollection=await baseModel.mongoConnect(req.subdomain,'event')
+        let eventModel=await baseModel.mongoConnect(req.subdomain,'event')
         id=ObjectId(id)
-        const result =await eventCollection.findOneAndDelete({_id:id});
+        const result =await eventModel.findOneAndDelete({_id:id});
         console.log('result',result);
           res.json({ error:false, data: "Event deleted successfully" });
       } catch (error) {

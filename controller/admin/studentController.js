@@ -209,7 +209,7 @@ let subdomain = req.subdomain
     );
     let userId=ObjectId(req.userId)
     groupAdmin=groupAdmin.findOne({_id:userId})
-      let studentCollection = await baseModel.mongoConnect(
+      let studentModel = await baseModel.mongoConnect(
         req.subdomain,
         "students"
       );
@@ -222,7 +222,7 @@ let subdomain = req.subdomain
 if(students && students.length>0){
   let studentsIds=students.map(student=>ObjectId(student))
   students=studentsIds
-  let datastudents=await studentCollection.find({_id:{$in:students}}).toArray()
+  let datastudents=await studentModel.find({_id:{$in:students}}).toArray()
  console.log("datastudents",datastudents,students)
  for (let index = 0; index < datastudents.length; index++) {
   
@@ -369,7 +369,7 @@ margin-left:10px;
    //sendMail(toSubsciberMail)
  }
  await groupModel.findOneAndUpdate({_id:groupId},{$addToSet:{students:{$each:students}}},{multi:true})
- await studentCollection.updateMany({_id:{$in:students}},{$addToSet:{group:groupId}},{multi:true})
+ await studentModel.updateMany({_id:{$in:students}},{$addToSet:{group:groupId}},{multi:true})
 
 }
 res.status(201).json({error:false,data:"Added"})
@@ -386,7 +386,7 @@ exports.removeStudentsFromGroup = async (req, res) => {
   
 let subdomain = req.subdomain
     console.log("subdomain", subdomain);
-    let studentCollection = await baseModel.mongoConnect(
+    let studentModel = await baseModel.mongoConnect(
       req.subdomain,
       "students"
     );
@@ -398,7 +398,7 @@ let subdomain = req.subdomain
     studentId=ObjectId(studentId)
     let group=await groupModel.findOne({_id:groupId},{$pull:{students:studentId}})
     console.log(studentId)
-    let student=await studentCollection.findOneAndUpdate({_id:studentId},{$pull:{group:groupId}})
+    let student=await studentModel.findOneAndUpdate({_id:studentId},{$pull:{group:groupId}})
     res.json({error:false,data:"Removed"})
   } catch (error) {
     res.status(503).json({error:true,data:'Some Error Occured',message:error.message})

@@ -14,12 +14,12 @@ exports.getCategoryById = async (req, res) => {
   try {
     let subdomain = await getSubDomain(req.get("origin"));
     if (checkSubDomainExist(subdomain)) {
-      let categoryCollection = await baseModel.mongoConnect(
+      let categoryModel = await baseModel.mongoConnect(
         req.subdomain,
         "category"
       );
 
-      const result = await categoryCollection.findOne({ _id: id });
+      const result = await categoryModel.findOne({ _id: id });
       console.log("stop");
 
       res.json({ error: false, data: result });
@@ -40,11 +40,11 @@ exports.getCategory = async (req, res) => {
     return res.json({ error: true, data: "No Subdomain" });
   } else if (checkSubDomainExist(subdomain)) {
     try {
-      let categoryCollection = await baseModel.mongoConnect(
+      let categoryModel = await baseModel.mongoConnect(
         subdomain,
         "category"
       );
-      const result = await categoryCollection.find({}).toArray();
+      const result = await categoryModel.find({}).toArray();
       res.json({ error: false, data: result });
     } catch (error) {
       res.status(500).json({ error: true, data: error.data });
