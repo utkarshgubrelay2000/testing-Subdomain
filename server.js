@@ -53,7 +53,7 @@ app.use("/user/course/", studentCourseRouter);
 app.use("/section", sectionRouter);
 app.use("/brand", brandRouter);
 app.use("/contact", contactRouter);
-app.use("/user/order", orderRouter);
+app.use("/user", orderRouter);
 
 app.listen(process.env.PORT, () => {
   console.log("running on PORT ", process.env.PORT);

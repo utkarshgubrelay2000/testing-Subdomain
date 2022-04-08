@@ -8,11 +8,14 @@ exports.getMyGroups = async (req, res) => {
   console.log(userId)
       try {
         
-let subdomain=await getSubDomain(req.get('origin'))
+let subdomain=await getSubDomain(req.get('host'))
 if(checkSubDomainExist(subdomain)){
           let groupModel=await baseModel.mongoConnect(req.subdomain,'group')
+/// project name only
+          const result =await groupModel.find({'students':userId}, {
+            projection: { students: 0 }
+        }).toArray()
 
-          const result =await groupModel.find({'students':userId}).toArray();
           console.log('stop');
 
             res.json({ error:false, data: result });
