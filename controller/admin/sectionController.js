@@ -11,7 +11,7 @@ exports.getSectionById = async (req, res) => {
     id=ObjectId(id)
   
       try {
-          console.log('start');
+        //  console.log('start');
         //  let sectionModel=await baseModel.mongoConnect(subdomain,section)
           let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')
 
@@ -66,7 +66,7 @@ exports.editSection = async (req, res) => {
     const sectionData =req.body;
     let {id} =req.params;
  
-
+console.log("helllo")
       try {
       //    let sectionModel=await baseModel.mongoConnect(subdomain,section)
           let sectionModel=await baseModel.mongoConnect(req.subdomain,'homepage')

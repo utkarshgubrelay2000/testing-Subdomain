@@ -1,5 +1,5 @@
 exports.authAdmin= require('./routes/admin/Auth');
-exports.sectionRouter = require('./routes/admin/section');
+exports.sectionAdminRouter = require('./routes/admin/section');
 exports.contactRouter = require('./routes/admin/contact');
 exports.groupRouter = require('./routes/admin/group');
 exports.courseRouter = require('./routes/admin/course');

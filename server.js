@@ -12,7 +12,7 @@ var {eventRouter,
   courseRouter,
   groupRouter,
   orderRouter,
-  sectionRouter,
+  sectionRouter,sectionAdminRouter,
   studentCategoryRouter,
   studentCourseRouter,
   studentRouter,
@@ -50,7 +50,7 @@ app.use("/user/auth/", userAuthRouter);
 app.use("/user/section/", sectionRouter);
 app.use("/user/category/", studentCategoryRouter);
 app.use("/user/course/", studentCourseRouter);
-app.use("/section", sectionRouter);
+app.use("/section", sectionAdminRouter);
 app.use("/brand", brandRouter);
 app.use("/contact", contactRouter);
 app.use("/user", orderRouter);
